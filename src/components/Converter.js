@@ -26,7 +26,7 @@ import InputLoading from './ui/InputLoading';
     React.useEffect(() => {
         console.log('render')
         dispatch(axiosConverter());
-      },[input1,input2,dispatch]) 
+      },[input1.currency,input2.currency,dispatch]) 
 
     const onChange = (e) => {
 
