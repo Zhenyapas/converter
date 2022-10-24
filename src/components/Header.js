@@ -14,7 +14,7 @@ import SelectCurrency from './SelectCurrency';
 
     const dispatch = useDispatch();
 
-    const loading = (state.status === 'loading');
+    const loading = (state.status === 'loading' || state.error);
 
     const changeValueCurrency = (value,) => { 
 

@@ -3,7 +3,7 @@ import * as React from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import {  Box, Button, Container,  Paper,  } from '@mui/material';
+import {  Box, Button, Container,  Paper, Typography,  } from '@mui/material';
 import DateInfo from './components/DateInfo';
 import Header from './components/Header';
 import Converter from './components/Converter';
@@ -16,8 +16,8 @@ function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   
   const dispatch = useDispatch();
-  const date = useSelector(state => state.converter.date);
-
+  const {date,error} = useSelector(state => state.converter);
+ 
   React.useEffect(() => {
     console.log('render')
     dispatch(axiosConverter());
@@ -49,6 +49,8 @@ function App() {
 
        
           <DateInfo date={date} sx={{color:'text.secondary', fontSize: 17,ml:5}} />
+
+          {error && <Typography sx={{color:'text.secondary',ml:5}}>Error: {error} </Typography>}
 
         
 

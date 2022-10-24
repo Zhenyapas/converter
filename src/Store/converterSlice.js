@@ -23,13 +23,18 @@ export const axiosConverter = createAsyncThunk (
 
     'converter/axiosConverter',
 
-    async () => {
+    async (_, {rejectWithValue}) => {
 
         try {
             
             const responseUsd = await axios.request(options('USD'));
             const responseEur = await axios.request(options('EUR'));
             const responseUah = await axios.request(options('UAH'));
+
+            const isStatusOk = (responseUsd.status === 200);
+            console.log(isStatusOk);
+
+            if(!isStatusOk) throw new Error('Server Error!');
 
             const USD = +responseUsd.data.toFixed(4);
             const EUR = +responseEur.data.toFixed(4);
@@ -39,7 +44,7 @@ export const axiosConverter = createAsyncThunk (
             
         } catch (error) {
 
-            console.error(error);
+            return rejectWithValue(error.message);
             
         }
     }
@@ -78,9 +83,9 @@ const converterSlice = createSlice ({
 
         ratioCurrency: {
 
-            USD: 4.6617,
-            EUR: 4.7379,
-            UAH: 0.1283,
+            USD: null,
+            EUR: null,
+            UAH: null,
 
         }
 
@@ -143,7 +148,10 @@ const converterSlice = createSlice ({
            state.inputHeader.value = state.ratioCurrency[state.inputHeader.currency]/state.ratioCurrency.UAH;
            state.date = new Date();
        },
-       [axiosConverter.rejected] : (state, action) => {},
+       [axiosConverter.rejected] : (state, action) => {
+           state.status = 'rejected';
+           state.error = action.payload;
+       },
 
     }
 });

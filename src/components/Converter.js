@@ -12,11 +12,9 @@ import InputLoading from './ui/InputLoading';
  export default function Converter() {
 
 
+    const {input1,input2,status,error} = useSelector(state => state.converter);
 
-    const input1 = useSelector(state => state.converter.input1);
-    const input2 = useSelector(state => state.converter.input2);
-
-    const loading = (useSelector(state => state.converter.status) === 'loading')
+    const isLoading = (status === 'loading' || error);
 
     console.log(useSelector(state => state.converter.status));
 
@@ -45,7 +43,7 @@ import InputLoading from './ui/InputLoading';
             <InputCurrency id={'input1'}  default={input1.currency} 
             options={['EUR','USD','UAH']} sx={{mt:3}} />
 
-            {  (loading) ? <InputLoading sx={{flexGrow:1,ml:4}}/> 
+            {  (isLoading) ? <InputLoading sx={{flexGrow:1,ml:4}}/> 
 
                 :
 
@@ -59,7 +57,7 @@ import InputLoading from './ui/InputLoading';
 
         <Box  sx={{maxWidth:600,display:'flex',alignItems:'center',justifyContent:'space-between',height: '50px',fontSize:40,ml:5}}> 
 
-            {  (loading) ?  <InputLoading sx={{flexGrow:1,mr:4}}/>
+            {  (isLoading) ?  <InputLoading sx={{flexGrow:1,mr:4}}/>
 
                 :
 
