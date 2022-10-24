@@ -1,24 +1,73 @@
-import logo from './logo.svg';
 import './App.css';
+import * as React from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import {  Box, Button, Container,  Paper,  } from '@mui/material';
+import DateInfo from './components/DateInfo';
+import Header from './components/Header';
+import Converter from './components/Converter';
+import { useDispatch,useSelector } from 'react-redux';
+import {axiosConverter} from './Store/converterSlice'
+
+
 
 function App() {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  
+  const dispatch = useDispatch();
+  const date = useSelector(state => state.converter.date);
+
+  React.useEffect(() => {
+    console.log('render')
+    dispatch(axiosConverter());
+  },[dispatch]) 
+
+  const update = () => dispatch(axiosConverter());
+
+  const theme = React.useMemo(
+    () => 
+      createTheme({
+
+        spacing: (factor) => `${0.25 * factor}rem`,
+        palette: {
+          mode: prefersDarkMode ? 'dark' : 'light',
+
+        }
+        }),
+    [prefersDarkMode],
+  );
+
+  
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+        <Container maxWidth={'md'}>
+         <Paper sx={{mt:10,maxWidth:650,p:5,height:380,borderRadius:4,pl:0}} >
+
+       
+          <DateInfo date={date} sx={{color:'text.secondary', fontSize: 17,ml:5}} />
+
+        
+
+         <Header sx={{maxWidth:600,display:'flex',alignItems:'center',justifyContent:'space-between',height: '50px',fontSize:25 , mt:4,ml:5}} />
+
+         <Converter />
+
+
+        <Box fullwidth sx={{display:'flex',alignItems:'center',justifyContent:'flex-start',mt:8,ml:3}}>
+          <Box sx={{display:'flex',flexGrow:1,justifyContent:'flex-start',alignItems:'center'}}>
+          <Button variant="standart" sx={{fontSize:16,width:80,}} onClick={update} >update</Button>
+          </Box>
+        </Box>
+
+         
+         </Paper>
+
+        </Container>
+    </ThemeProvider>
   );
 }
 
